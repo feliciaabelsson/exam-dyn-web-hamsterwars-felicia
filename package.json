@@ -6,7 +6,24 @@
   "scripts": {
     "test-frontend": "npx http-server ./evaluate/"
   },
-  "keywords": ["express", "REST", "API"],
-  "author": "David Andersson",
-  "license": "ISC"
+  "keywords": [
+    "express",
+    "REST",
+    "API"
+  ],
+  "author": "Felicia Abelsson",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feliciaabelsson/exam-dyn-web-hamsterwars-felicia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feliciaabelsson/exam-dyn-web-hamsterwars-felicia/issues"
+  },
+  "homepage": "https://github.com/feliciaabelsson/exam-dyn-web-hamsterwars-felicia#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.1",
+    "firestore": "^1.1.6"
+  }
 }

@@ -4,7 +4,8 @@
   "description": "Specification for assignment Hamster Wars, including data, with a script for evaluating if a submission follows the spec.",
   "main": "index.js",
   "scripts": {
-    "test-frontend": "npx http-server ./evaluate/"
+    "test-frontend": "npx http-server ./evaluate/",
+    "start": "node server.js"
   },
   "keywords": [
     "express",

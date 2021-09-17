@@ -48,4 +48,3 @@ Kompetenser
 + Att planera och genomföra framtagandet av användar- och databasdrivna webbapplikationer
 + Att optimera och anpassa databaser utifrån projektbehov
 + Att använda agila arbetsmetoder för att genomföra programmeringsprojekt inom utsatta tidsramar
-# exam-dyn-web-hamsterwars-felicia

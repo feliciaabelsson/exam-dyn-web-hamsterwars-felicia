@@ -39,7 +39,18 @@ router.put('/:id', async (req, res) => {
     // skickar ändringar till databasen
     await updateOneHamster(req.params.id, maybeBody)
     res.sendStatus(200)
-})
+}) 
+
+
+// WHAT TO ADD - G-nivå
+//1. GET - /hamsters/random
+//2. POST - /hamsters
+//3. DELETE - /hamsters/:id
+//4. GET - /hamsters/cutest - array med hamstrar som vunnit flest gånger
+           //gå igenom alla hamstrar, 
+           //räkna ut enligt räknetabellen
+//PUBLIC mapp? Där ska bilderna renderas
+
 
 
 // FUNCTIONS

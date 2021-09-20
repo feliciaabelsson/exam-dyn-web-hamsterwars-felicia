@@ -6,6 +6,8 @@ const connect = database.connect
 const db = connect()
 const HAMSTERS = 'hamsters'
 
+
+// GET
 // '/' räknas som /hamsters 
 // async används eftersom koden som ligger inuti använder await 
 router.get('/', async (req, res) => {
@@ -23,15 +25,24 @@ router.get('/:id', async (req, res) => {
    
 })
 
+// PUT
 // Uppdaterar ett dokument 
 router.put('/:id', async (req, res) => {
     const maybeBody = req.body
     // kontrollera att bodyn är ok - om ok skicka ändringar till databas och returnera en statuskod
     // Body måste innehålla dessa värden
-    if (!isHamsterObject(maybeHamster)) {
+    if (!isHamsterObject(maybeBody)) {
         res.status(400).send('Must send a correct hamster object')
-    }
+        return
+    } 
+
+    // skickar ändringar till databasen
+    await updateOneHamster(req.params.id, maybeBody)
+    res.sendStatus(200)
 })
+
+
+// FUNCTIONS
 
 // valideringsfunktion
 function isHamsterObject(maybe) {
@@ -41,7 +52,12 @@ function isHamsterObject(maybe) {
     } 
     // får en lista på egenskaperna
     let keys = Object.keys(maybe)
-    const allowed = ['name', 'loves', 'games', 'wins', 'age', 'favFood', 'imgName', 'defeats']
+    // om någon av dessa egenskaperna saknas är det inte ett hamster-objekt
+    if ( !keys.includes('name') || !keys.includes('loves') || !keys.includes('games') || !keys.includes('wins') || !keys.includes('age') || !keys.includes('favFood') || !keys.includes('imgName') || !keys.includes('defeats') ) {
+		return false
+	}
+    // om  objekt finns med alla egenskaperna
+	return true
 }
 
 
@@ -80,6 +96,11 @@ async function getOneHamster(id) {
     } else {
         return null
     }
+}
+
+async function updateOneHamster(id, object) {
+    const docRef = db.collection(HAMSTERS).doc(id)
+    docRef.set(object)
 }
 
 module.exports = router

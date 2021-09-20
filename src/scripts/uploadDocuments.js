@@ -9,7 +9,6 @@ const hamsterData = require('../data/data.json')
 hamsterData.forEach(function(obj) {
     db.collection('hamsters').add({
         //tells firestore what data that should be written
-        id: obj.id,
         name: obj.name, 
         age: obj.age,
         favFood: obj.favFood,

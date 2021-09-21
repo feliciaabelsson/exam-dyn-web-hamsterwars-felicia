@@ -36,7 +36,3 @@ app.use("/hamsters", hamsterRouter);
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}.`);
 });
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}.`);
-});

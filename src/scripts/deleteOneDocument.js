@@ -9,7 +9,7 @@ deleteOne();
 async function deleteOne(id) {
 	console.log('Deleting a document...');
     //the id that we want to delete
-	const docId = id || '9BaVVlZK884gb1ZosLou'
+	const docId = id || 'nTL9nuwEleyhlBGt3Jfs'
 
     //goes into the database and into collection hamsters and then into doucment and the looks for the chosen id
 	const docRef = db.collection(HAMSTERS).doc(docId)

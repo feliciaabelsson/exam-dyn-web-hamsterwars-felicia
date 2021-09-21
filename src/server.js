@@ -1,9 +1,11 @@
+const { urlencoded } = require("express");
 const express = require("express");
 const app = express();
 
-//If heroku gives us a PORT the the environmental variable will run, if not run port 1337
-//environmental variables is good for sercrets
-//Heroku skapar en env. variabel som heter PORT
+const hamsterRouter = require("./routes/hamsters");
+
+// first run environmental variable, if not run port 1337
+// environmental variables is good for sercrets
 const PORT = process.env.PORT || 1337;
 
 app.use((req, res, next) => {
@@ -11,9 +13,28 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  console.log("Web root");
-  res.send("The server is deployed");
+// MIDDLEWARES
+// middleware för body
+// urlencoded = om man vill skicka ett formulär
+app.use(express.urlencoded({ extended: true }));
+// för att skicka data i json format
+app.use(express.json());
+// Logger för att kunna se vad för requests som kommer in
+app.use((req, res, next) => {
+  console.log(`${req.method}  ${req.url}`, req.body);
+  next();
+});
+
+// Routes
+// talar om att hamstersRouter middleware ska användas för alla routes som börjar med /hamsters
+app.use("/hamsters", hamsterRouter);
+
+// app.get('/hamsters', (req, res) => {
+//     res.send(hamsterRouter)
+// })
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}.`);
 });
 
 app.listen(PORT, () => {

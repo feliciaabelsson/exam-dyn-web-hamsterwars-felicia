@@ -51,6 +51,7 @@ router.get("/random", async (req, res) => {
 //   res.sendStatus(200);
 // });
 
+
 //POST ENDPOINTS
 router.post("/", async (req, res) => {
   const maybeBody = req.body;
@@ -99,8 +100,7 @@ async function addOneHamster(object) {
   // docRef.set(object);
 }
 
-//Get all
-// Funktion som hämtar alla hamstrar från databasen
+//GET ALL function
 async function getAllHamsters() {
   const docRef = db.collection(HAMSTERS);
   const docSnapshot = await docRef.get();
@@ -109,19 +109,17 @@ async function getAllHamsters() {
   if (docSnapshot.empty) {
     return [];
   }
-
+  
   const array = [];
   await docSnapshot.forEach(async docRef => {
     const data = await docRef.data();
     data.id = docRef.id;
     array.push(data);
   });
-
   return array;
 }
 
-//Get one
-//async eftersom vi kommunicerar med databasen som kommer ta tid
+//GET ONE function
 async function getOneHamster(id) {
   const docRef = db.collection(HAMSTERS).doc(id);
   const docSnapshot = await docRef.get();
@@ -135,6 +133,16 @@ async function getOneHamster(id) {
     return null;
   }
 }
+
+// async function updateOneHamster(id, object) {
+//   const docRef = db.collection(HAMSTERS).doc(id);
+//   docRef.set(object);
+// }
+
+
+
+
+
 
 // async function updateOneHamster(id, object) {
 //   const docRef = db.collection(HAMSTERS).doc(id);

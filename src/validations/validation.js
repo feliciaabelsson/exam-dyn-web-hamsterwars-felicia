@@ -1,4 +1,11 @@
 // valideringsfunktion
+
+
+// function isProperIndex(index, maxIndex) {
+// 	return index >= 0 && index < maxIndex
+// }
+
+
 function isHamsterObject(maybe) {
   //om maybe inte är ett objekt
   if (typeof maybe !== "object") {
@@ -23,4 +30,6 @@ function isHamsterObject(maybe) {
   return true;
 }
 
-module.exports = isHamsterObject;
+
+
+module.exports = {isHamsterObject};

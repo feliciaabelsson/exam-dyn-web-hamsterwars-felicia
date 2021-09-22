@@ -32,4 +32,4 @@ function isHamsterObject(maybe) {
 
 
 
-module.exports = {isHamsterObject};
+module.exports = isHamsterObject;

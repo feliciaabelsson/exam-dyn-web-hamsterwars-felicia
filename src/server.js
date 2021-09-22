@@ -1,13 +1,14 @@
 const { urlencoded } = require("express");
 const express = require("express");
 const app = express();
-
+const cors = require('cors')
 const hamsterRouter = require("./routes/hamsters");
 
 // first run environmental variable, if not run port 1337
 // environmental variables is good for sercrets
 const PORT = process.env.PORT || 1337;
 
+app.use( cors())
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();

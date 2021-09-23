@@ -11,15 +11,24 @@ const isHamsterObject = require("../validations/validation");
 // GET ENDPOINTS
 router.get("/", async (req, res) => {
   let array = await getAllHamsters();
-  console.log(array); //skriver ut alla objekt i arrayen korrekt
+  console.log(array);
   res.status(200).send(array);
+});
+
+router.get("/random", async (req, res) => {
+  let array = await getAllHamsters();
+  console.log(array);
+
+  let randomHamster =
+  array[Math.floor(Math.random() * array.length)]
+  res.status(200).send(randomHamster)
 });
 
 router.get("/:id", async (req, res) => {
   // Funktion som hämtar ett element om det finns
   const maybeHamster = await getOneHamster(req.params.id);
 
-  if (!maybeHamster) {
+  if (!maybeHamster) { //Denna borde funka när delete är klar
     res.sendStatus(404);
     return;
   } else {
@@ -27,29 +36,6 @@ router.get("/:id", async (req, res) => {
     res.status(200).send(maybeHamster);
   }
 });
-
-router.get("/random", async (req, res) => {
-  let array = await getRandomHamster()
-
-  let randomHamster =
-  array[Math.floor(Math.random() * array.length)]
-  res.status(200).send(randomHamster)
-});
-
-// PUT ENDPOINTS
-// Uppdaterar ett dokument
-// router.put("/:id", async (req, res) => {
-//   const maybeBody = req.body;
-//   // kontrollera att bodyn är ok - om ok skicka ändringar till databas och returnera en statuskod
-//   // Body måste innehålla dessa värden
-//   if (!isHamsterObject(maybeBody)) {
-//     res.status(400).send("Must send a correct hamster object");
-//     return;
-//   }
-//   // skickar ändringar till databasen
-//   await updateOneHamster(req.params.id, maybeBody);
-//   res.sendStatus(200);
-// });
 
 
 //POST ENDPOINTS
@@ -65,34 +51,147 @@ router.post("/", async (req, res) => {
   res.status(200).send(addHamster);
 });
 
+// PUT ENDPOINTS
+router.put("/:id", async (req, res) => {
+  const docRef = db.collection(HAMSTERS);
+  const docSnapshot = await docRef.get();
+  const maybeBody = req.body;
+  
+//  const maybeHamster = req.params.id
+ const maybeHamster = await getOneHamster(req.params.id)
+  
+  //1. kontrollera om id finns i db
+  if(!maybeHamster) {
+    res.status(404).send('Not found id');
+    return;
+   } else if (!isHamsterObject(maybeBody)) {
+    res.status(400).send("Bad request");
+    return;
+   }
+   else {
+    await updateOneHamster(req.params.id, maybeBody)
+    res.sendStatus(200)
+    //  let updateHamster = 
+   // console.log("The hamster object from get id" , maybeHamster); //här har du idt 
+    //res.status(200).send(maybeHamster);//denna hämtar id - SKA ändra till att objektet inuti idt ändras till ny data
+    //  docSnapshot[maybeHamster] = req.body
+    // let updateHamster =  maybeHamster[req.body]
+    //  res.status(200).send(updateHamster)
+
+    
+
+    // let addHamster = await addOneHamster(maybeBody);
+    // res.status(200).send(addHamster);
+  
+  }
+
+  //ändringar i body ska skriva över nuvarande body 
+  // let index = Number(req.params.index)
+	// if( !isProperIndex(index, tools.length) ) {
+	// 	res.status(400).send('Bad tool index')
+	// }
+	// else if( !isToolsObject(req.body) ) {
+	// 	res.status(400).send('Bad tool object')
+	// }
+	// else {
+	// 	tools[index] = req.body
+	// 	res.sendStatus(200)
+	// }
+
+
+  //  if(maybeHamster.exists) {
+  //    res.status(200).send('id exists')
+  //  } else {
+  //    res.status(404).send('Not found id')
+  //  }
+  
+  // else {
+  //   res.sendStatus(200)
+  // }
+  //2. kontrollera om det är någon ändring i body
+
+  // if (!isHamsterObject(maybeBody)) { //ska inte kolla om body stämmer, utan om body gör några ändringar
+  //   res.status(404).send("Must send a correct hamster object");
+  //   return;
+  // }
+  // //3. Pusha ihop ändringar i body till det rätta idt 
+  // await updateOneHamster(req.params.id, maybeBody);
+  // res.sendStatus(200);
+
+});
+
+function isProperIndex(index, maxIndex) {
+	return index >= 0 && index < maxIndex
+}
+
+
 //DELETE ENDPOINTS
-// router.delete("/:id", (req, res) => {});
-// FUNCTIONS
+router.delete("/:id", async (req, res) => {
+  let array = await getAllHamsters();
+  const id = req.params
+  const index = array.findIndex(h => h.id == id)
+ 
 
-// async function getRandomHamster() {
-//   //Hämtar alla hamstrar
-//   const hamstersRef = db.collection(HAMSTERS);
-//   const hamstersSnapshot = await hamstersRef.get();
+  if(index) {
+    array.splice(index, 1)
+     res.sendStatus(200)
+     return
+  } else {
+    res.status(404).send('Not found id');
+    return;
+  }
+ 
 
-//   // Om det inte finns några hamstrar, skicka tillbaka en tom lista
-//   if (hamstersSnapshot.empty) {
-//     return [];
-//   }
+// const docId = await getOneHamster(req.params.id);
+// const docRef = db.collection(HAMSTERS).doc(docId)
+// const docSnapshot = await docRef.get()
 
-//   const array = [];
-
-//   // Loopar igenom alla hamstrar och väntar till loopen är klar
-//   await hamstersSnapshot.forEach(async (docRef) => {
-//     // Väntar på att data ska hämtas
-//     const data = await docRef.data();
-//     // Plockar ut varje id
-//     data.id = docRef.id;
-//     // pushar data till arrayen
-//     array.push(data);
-//   });
-//   return array;
+// if (docSnapshot.exists) {
+// 	const result = await docRef.delete()
+//   res.status(200).send(result)
+// } else {
+//   res.status(404).send('Doc does not exists')
 // }
 
+
+
+  // console.log('Document exists? ', docSnapshot.exists);
+    //if the document reference exists then delete
+
+
+  
+
+  //1. hämta id från databas 
+  //2. (Kolla om id finns)
+  //3. 
+  // const docRef = db.collection(HAMSTERS);
+  // const docSnapshot = await docRef.get();
+  // let array = await getAllHamsters();
+  // const getIndex = (id) => array.findIndex(u => u.id == parseInt(id))
+  // const hamsterIndex = getIndex(req.params.id)
+
+
+  // if (hamsterIndex === -1) return res.sendStatus(404)
+
+  // array.splice(userIndex, 1)
+  // res.send(array)
+
+
+  // let index = req.params.index
+	// if( !isProperIndex(index, array.length) ) {
+	// 	res.status(404).send('Bad hamster index')
+	// } else {
+	// 	array.splice(index, 1)
+	// 	res.sendStatus(200)
+	// }
+
+});
+// FUNCTIONS
+
+
+
+
+//ADD ONE function 
 async function addOneHamster(object) {
   const docRef = await db.collection(HAMSTERS).add(object);
   const hamster = { id: docRef.id }
@@ -134,34 +233,24 @@ async function getOneHamster(id) {
   }
 }
 
-// async function updateOneHamster(id, object) {
-//   const docRef = db.collection(HAMSTERS).doc(id);
-//   docRef.set(object);
-// }
+
+async function updateOneHamster(id, object) {
+  const docRef = db.collection(HAMSTERS).doc(id);
+  docRef.set(object);
+}
 
 
-
-
-
-
-// async function updateOneHamster(id, object) {
-//   const docRef = db.collection(HAMSTERS).doc(id);
-//   docRef.set(object);
-// }
 
 module.exports = router;
 
 // WHAT TO ADD - G-nivå
-//1. GET - /hamsters/random
 //3. DELETE - /hamsters/:id
 //4. GET - /hamsters/cutest - array med hamstrar som vunnit flest gånger
 //gå igenom alla hamstrar,
 //räkna ut enligt räknetabellen
 //PUBLIC mapp? Där ska bilderna renderas
 
-// const months = ["jan", "feb", "mar", "april"];
-// const random = Math.floor(Math.random() * months.length);
-// console.log(random, months[random]);
+
 
 //Object.
 //value.

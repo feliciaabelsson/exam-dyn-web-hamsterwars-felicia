@@ -26,7 +26,12 @@ app.use((req, res, next) => {
   console.log(` ${req.method}  ${req.url}`, req.body);
   next();
 });
-// app.use("/web", express.static(__dirname + "/../public"));
+
+// MIDDLEWARE - statiska sidor
+app.use("/img", express.static(__dirname + '/hamsters'))
+app.use("/", express.static(__dirname + '/../public'))
+
+
 
 // Routes
 // talar om att hamstersRouter middleware ska användas för alla routes som börjar med /hamsters

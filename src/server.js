@@ -16,8 +16,6 @@ app.use((req, res, next) => {
 });
 
 // MIDDLEWARES
-// middleware för body
-// urlencoded = om man vill skicka ett formulär
 app.use(express.urlencoded({ extended: true }));
 // för att skicka data i json format
 app.use(express.json());
@@ -30,7 +28,6 @@ app.use((req, res, next) => {
 // MIDDLEWARE - statiska sidor
 app.use("/img", express.static(__dirname + '/hamsters'))
 app.use("/", express.static(__dirname + '/../public'))
-
 
 
 // Routes

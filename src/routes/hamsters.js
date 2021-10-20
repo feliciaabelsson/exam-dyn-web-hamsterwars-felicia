@@ -20,20 +20,21 @@ router.get("/", async (req, res) => {
 // GET cutest hamster
 router.get("/cutest", async (req, res) => {
   let cutest = await getCutestHamster()
-  console.log(cutest)
+  //console.log(cutest)
   res.status(200).send(cutest)
 })
 
+
+// GET random hamster
 router.get("/random", async (req, res) => {
   let array = await getAllHamsters();
-  // console.log(array);
-
   let randomHamster =
   array[Math.floor(Math.random() * array.length)]
   res.status(200).send(randomHamster)
 });
 
-//GET :id
+
+// GET :id
 router.get("/:id", async (req, res) => {
   // Funktion som hämtar ett element om det finns
   const maybeHamster = await getOneHamster(req.params.id);
@@ -96,12 +97,12 @@ router.delete("/:id", async (req, res) => {
 
 // FUNCTIONS ---- XXX
 
-//GET ALL function
+// GET ALL function
 async function getAllHamsters() {
   const docRef = db.collection(HAMSTERS);
   const docSnapshot = await docRef.get();
 
-  // Om det inte finns några hamstrar, skicka tillbaka en tom lista
+  //Om det inte finns några hamstrar, skicka tillbaka en tom lista
   if (docSnapshot.empty) {
     return [];
   }
@@ -115,12 +116,13 @@ async function getAllHamsters() {
   return array;
 }
 
-//GET ONE function
+
+// GET ONE function
 async function getOneHamster(id) {
   const docRef = db.collection(HAMSTERS).doc(id);
   const docSnapshot = await docRef.get();
 
-  // Kollar om jag har ett dokument eller inte
+  //Kollar om jag har ett dokument eller inte
   if (docSnapshot.exists) {
     const hamster = await docSnapshot.data();
     console.log('The hamster that i requested:', hamster)
@@ -146,7 +148,7 @@ async function updateHamster(id, body) {
 }
 
 
-//ADD ONE function 
+// ADD ONE function 
 async function addOneHamster(object) {
   const docRef = await db.collection(HAMSTERS).add(object);
   const hamster = { id: docRef.id }
@@ -154,7 +156,7 @@ async function addOneHamster(object) {
 }
 
 
-//GET CUTEST function
+// GET CUTEST function
 async function getCutestHamster() {
   let hamsters = await getAllHamsters()
 
